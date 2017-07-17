@@ -10,6 +10,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Home | Triangle</title>
+    
+    <!-- 검색창 -->
+	<link rel="stylesheet" href="css/test1111.css">
+	    
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/animate.min.css" rel="stylesheet"> 
@@ -31,103 +35,144 @@
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.js"></script>
     <script type="text/javascript">
-    $(function(){
-		// 로그아웃 버튼 클릭 시 confirm
-		$('#logoutA').click(function(){
-			if(confirm("로그아웃 하시겠습니까?")){
-	    		 alert("로그아웃되었습니다.")
-	    		 location.href="logout.do";
-	    	 }else{
-	    		 return;
-	    	 }
-		});
-		
-	    $('input[name=hotKeyword]').bind("click", function() {
-			var str = $('#search').val();
-			var returnStr = str.split(" ");
-			
-			if(returnStr.length==1){
-				$('#search').val($('#search').val()+$(this).val()+" ");
-				return;
-			}
-			
-			for(var i=0; i<returnStr.length-1; i++){
-				if(returnStr[i]==$(this).val()){
-		            return;
-		         }
-			}//for
-			$('#search').val($('#search').val()+$(this).val()+" ");
-	    });//bind
- });//function
+    $(function() {
+    	// 로그아웃 버튼 클릭 시 confirm
+    	$('#logoutA').click(function(){
+    		if(confirm("로그아웃 하시겠습니까?")){
+        		 alert("로그아웃되었습니다.")
+        		 location.href="logout.do";
+        	 }else{
+        		 return;
+        	 }
+    	});
+    	
+        
+        // 인기 검색어 클릭 시 new 2
+        $('.hotKeyword').bind("click", function() {
+    		var str = $('#search').val();
+    		var returnStr = str.split(" ");
+    		
+    		if(returnStr.length==1){
+    			$('#search').val($('#search').val()+$(this).text()+" ");
+    			return;
+    		}	
+    		for(var i=0; i<returnStr.length-1; i++){
+    			if(returnStr[i]==$(this).text()){
+    	            return;
+    	         }
+    		}//for
+    		$('#search').val($('#search').val()+$(this).text()+" ");
+        });//bind       
+        
+        
+        //검색 엔터 추가..
+        $("#search").keypress(function(enter) {
+              if(enter.which==13){
+                 search(); // 실행할 이벤트..
+              }
+        });//keypress
+        
+        // 검색창
+    	$('.search-input').focus(function(){
+    		$(this).parent().addClass('focus');
+    	}).blur(function(){
+    		$(this).parent().removeClass('focus');
+    	}); // focus()
+    	
+    	// 카테고리 dropdown
+    	$('.dropdown-toggle').dropdown();
+    	
+    });//function
 
- function selectButton(kind) {
-	//alert("${keyword}");
-	var keyword = '${keyword}';
-	//alert(keyword);
-	keyword = escape(encodeURIComponent(keyword));
-	//alert(escape(encodeURIComponent(${keyword})));
-	location.href="searchAgain.do?keyword="+keyword+"&&select=${select}"+"&&from="+kind;
-}
-function deleteBookmark(kind, bno) {
-	if(kind=='book')
-           $(function() {
-                $.ajax({
-                   type:"post",
-                   url:"bookDeleteBookmark.do",
-                   data:"book_no="+bno,
-                   dataType:"json",
+
+    //전체, 책, 스토리 선택
+    function selectButton(kind) {
+    	var keyword = '${keyword}';
+    	keyword = escape(encodeURIComponent(keyword));
+    	location.href="searchAgain.do?keyword="+keyword+"&&select=${select}"+"&&from="+kind+"&&sort=";
+    }
+
+
+    ///북마크
+    function deleteBookmark(kind, bno, sno) {
+		$(function() {
+        	$.ajax({
+            	type:"post",
+            	url:"bookDeleteBookmark.do",
+               	data:"book_no="+bno,
+               	dataType:"json",
                       
-                   success:function(data){
-                      $('#'+bno).remove;
-                      location.reload();
-                   }//callback
-                });//ajax
-             });//function
-}
-function bookmark(kind, bno) {
-	if(kind=='book'){
-		if(confirm("이 글을 북마크 하시겠습니까?")){
-			  $(function() {
-                   $.ajax({
-                      type:"post",
-                      url:"insertBookmark.do",
-                      data:"book_no="+bno+"&&storyNo=0",
-                      dataType:"json",
-                         
-                      success:function(data){
-                         $('#'+bno).remove;
-                         location.reload();
-                      }//callback
-                   });//ajax
-                });//function
-		}
-	}
-}
-function loginCheck() {
-	if(confirm("로그인을 해주세요.\n로그인 창으로 이동합니다."))	
-		location.href="Login.jsp";
-}
-var category="";
-var index="";
-var value="all";
-function category_selected() {
-	category = document.getElementById('category');
-	index = category.selectedIndex;
-	value = category.options[index].value;
-	document.getElementById('search').value="";
-}
-//검색 버튼 눌렀을 때
-function search() {
-	var keyword = document.getElementById('search');
-	if(keyword.value==""){
-		alert("검색어를 입력해주세요");
-		return;
-	}
-	keyword = escape(encodeURIComponent(keyword.value));
-	location.href="search.do?select="+value+"&&keyword="+keyword+"&&from=all";
-}
+              	success:function(data){
+                  	$('#'+bno).remove;
+                  		location.reload();
+               	}//callback
+       		});//ajax
+       	});//function
+    }
+    function bookmark(kind, bno, sno) { 
+    	if(confirm("이 글을 북마크 하시겠습니까?")){
+          	$(function() {
+             	$.ajax({
+                  	type:"post",
+                   	url:"insertBookmark.do",
+                    data:"book_no="+bno+"&&storyNo=0",
+                  	dataType:"json",
+                             
+                 	success:function(data){
+                     	$('#'+sno).remove;
+                        	location.reload();
+                 	}//callback
+               	});//ajax
+          	});//function
+    	}
+    }
+
+    //로그인 체크
+    function loginCheck() {
+    	if(confirm("로그인을 해주세요.\n로그인 창으로 이동합니다."))	
+    		location.href="index.jsp";
+    }
+
+    //검색
+    var value="all";
+    var category="";
+    var index="";
+    function category_selected() {
+    	category = document.getElementById('category');
+    	index = category.selectedIndex;
+    	value = category.options[index].value;
+    	document.getElementById('search').value="";
+    }
+
+    function search() {
+        var keyword = document.getElementById('search');
+        if(keyword.value==""){
+           alert("검색어를 입력해주세요");
+           return;
+        }
+        keyword = escape(encodeURIComponent(keyword.value));
+        location.href="searchAgain.do?select="+value+"&&keyword="+keyword+"&&from=book&&sort=";
+     }
+
+    // 7/12 조회수순, 최신순, 인기순 정렬
+	function sorting(kind) {
+      	var keyword = '${keyword}';
+       	keyword = escape(encodeURIComponent(keyword));
+   		if(${select==""}) 
+         	location.href="searchAgain.do?keyword="+keyword+"&&select=all&&from=book"+"&&sort="+kind;
+      	else
+           	location.href="searchAgain.do?keyword="+keyword+"&&select=${select}&&from=book"+"&&sort="+kind;
+  	}
 </script>
 <style type="text/css">
+table{
+	width: 100%;
+}
+td{
+	border: 1px solid #c2c3c4;
+	width: 33%;
+	height: 100px;
+}
 
 </style>
 </head>
@@ -259,52 +304,103 @@ function search() {
    <!-- --------------------------------------------- [끝] 제목 Section --------------------------------------------- -->
 	<br/>
 	<br/>
-	<br/>
-	<div class="container" style="text-align: center;">
-		<!-- 검색 -->
-		<select id="category" onchange="category_selected()" style="width: 100px;">
-			<option value="all">전체</option>
-			<option value="title">제목</option>
-			<option value="content">내용</option>
-			<option value="location">장소</option>
-		</select>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<c:choose>
-			<c:when test="${keyword==null}">
-				<input type="text" name="search" id="search" placeholder="검색어를 입력하세요">
-			</c:when>
-			<c:otherwise>
-				<input type="text" name="search" id="search" value="${keyword}">
-			</c:otherwise>
-		</c:choose>
-		<input type="button" value="검색" onclick="search()"><p><br>
-			<!-- 검색 기법  -->
-			<input type="button" name="hotKeyword" value="${reportList[0]}" onclick="">&ensp; 
-			<input type="button" name="hotKeyword" value="${reportList[1]}" onclick="">&ensp; 
-			<input type="button" name="hotKeyword" value="${reportList[2]}" onclick="">&ensp; 
-			<input type="button" name="hotKeyword" value="${reportList[3]}" onclick="">&ensp; 
-			<input type="button" name="hotKeyword" value="${reportList[4]}" onclick=""><br><p>
-	
-			<!-- all, title, content 선택 -->
-		<br/>
-		<div>
-			<input type="button" value="#ALL" onclick="selectButton('all')">&nbsp;&nbsp; 
-			<input type="button" value="#BOOK" onclick="selectButton('book')">&nbsp;&nbsp; 
-			<input type="button" value="#STORY" onclick="selectButton('story')"><p>
+	<div class="container" style="width: 100%;">
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-1">
+				<select id="category" onchange="category_selected()" class="form-control" style="position: relative;top: 33px;height: 40px;">
+				  <option value="all">전체</option>
+				  <option value="title">제목</option>
+				  <option value="content">내용</option>
+				  <option value="location">장소</option>
+				</select>
+				
+				<!-- <div class="search-option"> -->
+				<!-- <input name="select" type="radio" value="all" id="type-users" checked="checked"> -->
+				
+			</div>
+			<div class="col-md-4">
+				<br/>
+		<!-- --------------------------------------------- [시작] 검색창 --------------------------------------------- -->	
+				<form class="search-form">
+					<c:choose>
+						<c:when test="${keyword==null}">
+							<input type="text" name="search" id="search" placeholder="검색어를 입력하세요" class="search-input">
+							
+						</c:when>
+						<c:otherwise>
+							<input type="text" name="search" id="search" value="${keyword}" class="search-input">
+							
+						</c:otherwise>
+					</c:choose>
+				</form>
+				<p>
+				<i class="fa fa-search" aria-hidden="true" id="search-icon" type="button" onclick="search()"></i>
+
+	<!-- --------------------------------------------- [끝] 검색창 --------------------------------------------- -->	
+				
+			</div>
+			<div class="col-md-1">		
+				<!-- <input type="button" onclick="search()" value="검색" style="top: 33px;position: relative;width: 100%;background-color: white; border-radius: 40px;height: 40px;" class="btn btn-common"> --> 
+			</div>
+			<div class="col-md-3"></div>
 		</div>
+			
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6" style="text-align: center;">
+				<br/>
+				인기검색어 &ensp;<i class="fa fa-chevron-right" aria-hidden="true"></i>&ensp;&ensp;&ensp;
+				<a class="hotKeyword"><font size="4px">${reportList[0]}</font></a>&ensp;&ensp;&ensp;  
+				<a class="hotKeyword"><font size="4px">${reportList[1]}</font></a>&ensp;&ensp;&ensp;   
+				<a class="hotKeyword"><font size="4px">${reportList[2]}</font></a>&ensp;&ensp;&ensp; 
+				<a class="hotKeyword"><font size="4px">${reportList[3]}</font></a>&ensp;&ensp;&ensp;
+				<a class="hotKeyword"><font size="4px">${reportList[4]}</font></a>&ensp;&ensp;&ensp;
+			</div>
+			<div class="col-md-3">
+			</div>
+		</div>
+		<br/>
+		<br/>
+		<br/>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<table style="width: 100%;text-align: center;">
+					<tr>
+						<td><a onclick="selectButton('all')">All</a></td>
+						<td><a onclick="selectButton('story')">Story</a></td>
+						<td style="background-color: #b71010;"><a onclick="selectButton('book')" style="color: white;">Storybook</a></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-3"></div>
+		</div>
+		<br/>
 	</div>
-	<br/>
-	<br/>
-	<!-- --------------------------------------------- [시작] Book List--------------------------------------------- -->
-	<!-- <div class="container"> -->
-	<c:if test="${keyword!=null}">
+	
+	<!-- --------------------------------------------- [시작] Book List--------------------------------------------- -->	
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<%-- <c:if test="${keyword!=null}">
 		<h4 align="center">${keyword}의검색결과..all</h4>
-	</c:if>
+	</c:if> --%>
 	<c:choose>
 		<c:when test="${fn:length(bookList)!=0}">
-			<h2 align="center">Books</h2>
 			<div class="container" style="width: 85%;">
 				<div class="row">
+					<div class="col-md-12" style="text-align: center;">
+						<font size="30px">STORYBOOK</font>
+					</div>
+					<div style="text-align: left;">
+						<a class="sorting" id="new-sort" href="javascript:sorting('new')" style="font-size: 18px;text-decoration: underline;color: black;">최신순</a>&ensp;&ensp;
+						<a class="sorting" id="hit-sort" href="javascript:sorting('hit')" style="font-size: 18px;color: black;">조회수순</a>&ensp;&ensp;
+						<a class="sorting" id="bookmark-sort" href="javascript:sorting('bookmark')" style="font-size: 18px;color: black;">인기순</a>
+					</div>
 					<c:forEach items="${bookList}" var="book">
 						<c:if test="${book.nick!=sessionScope.mvo.nickname}">
 							<!-- book -->
@@ -320,12 +416,12 @@ function search() {
 													<c:choose>
 														<c:when test="${book.bookmark=='false'}">
 															<div class="bookmark">
-																<img id="0" src="${initParam.root}images/bookmarkOff_book.png" width="50" height="50" onclick="bookmark('book',${book.book_no},0)">
+																<img id="${book.book_no}" src="${initParam.root}images/bookmarkOff_book.png" width="50" height="50" onclick="bookmark('book',${book.book_no},0)">
 															</div>
 														</c:when>
 														<c:otherwise>
 															<div class="bookmark">
-																<img id="0" src="${initParam.root}images/bookmarkOn_book.png" width="50" height="50" onclick="deleteBookmark('book',${book.book_no},0)">
+																<img id="${book.book_no}" src="${initParam.root}images/bookmarkOn_book.png" width="50" height="50" onclick="deleteBookmark('book',${book.book_no},0)">
 															</div>
 														</c:otherwise>
 													</c:choose>
@@ -338,9 +434,18 @@ function search() {
 													<header class="card__item-b card__header-b">
 														<p class="sb-letter-b">Book</p>
 														<h6 class="card__item-b card__item--small-b card__label-b">${book.nick}</h6>
-														<h2 class="card__item-b card__item--small-b card__title-b bookTitle" style="font-size: 33px; font-family: 'Nanum Myeongjo'">
-															<a href="showStoryList.do?book_no=${book.book_no}"><b>${book.book_title}</b></a>
-														</h2>
+														<c:choose>
+															<c:when test="${sessionScope.mvo.email!=null}">
+																<h2 class="card__item-b card__item--small-b card__title-b bookTitle" style="font-size: 33px; font-family: 'Nanum Myeongjo'">
+																	<a href="showStoryList.do?book_no=${book.book_no}"><b>${book.book_title}</b></a>
+																</h2>
+															</c:when>
+															<c:otherwise>
+																<h2 class="card__item card__item--small card__title" style="font-size: 33px; font-family: 'Nanum Myeongjo'">
+																	<a href="javascript:loginCheck()">${book.book_title}</a>
+																</h2>
+															</c:otherwise>
+														</c:choose>
 													</header>
 
 													<div class="story-down-b">
@@ -362,15 +467,10 @@ function search() {
 		</c:when>
 		<c:otherwise>
 			<h2>공개된 북이 없습니다.</h2>
-			<!-- <a href="book_Insert.jsp" >Story Book 추가하기</a> -->
 		</c:otherwise>
 	</c:choose>
-	<!-- </div> -->
 	<!-- --------------------------------------------- [끝] Book List --------------------------------------------- -->
-	<br />
-	<br />
-	<br />
-	<br />
+	
 	<br/>
 	<br/>
 	<br/>

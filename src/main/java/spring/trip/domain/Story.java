@@ -26,9 +26,9 @@ public class Story {
 	
 	//추가
 	private String bookmark;
-	//추가
 	private int countComment;
-	
+	private int bookmark_count;
+
 	public Story() {
 	}
 	
@@ -177,8 +177,7 @@ public class Story {
 	public void setOrgfilename(String orgfilename) {
 		this.orgfilename = orgfilename;
 	}
-	
-	//추가
+
 	public String getBookmark() {
 		return bookmark;
 	}
@@ -186,9 +185,7 @@ public class Story {
 	public void setBookmark(String bookmark) {
 		this.bookmark = bookmark;
 	}
-	
-	
-	//추가
+
 	public int getCountComment() {
 		return countComment;
 	}
@@ -197,6 +194,14 @@ public class Story {
 		this.countComment = countComment;
 	}
 
+	public int getBookmark_count() {
+		return bookmark_count;
+	}
+
+	public void setBookmark_count(int bookmark_count) {
+		this.bookmark_count = bookmark_count;
+	}
+	
 	@Override
 	public String toString() {
 		return "Story [storyNo=" + storyNo + ", storyTitle=" + storyTitle + ", storyContent=" + storyContent

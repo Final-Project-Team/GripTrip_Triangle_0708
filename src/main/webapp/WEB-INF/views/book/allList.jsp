@@ -55,41 +55,26 @@ $(function() {
     	 }
 	});
 	
-	/* $('input[name=hotKeyword]').bind("click", function() {
+    
+    // 인기 검색어 클릭 시 new 2
+    $('.hotKeyword').bind("click", function() {
 		var str = $('#search').val();
 		var returnStr = str.split(" ");
 		
 		if(returnStr.length==1){
-			$('#search').val($('#search').val()+$(this).val()+" ");
+			$('#search').val($('#search').val()+$(this).text()+" ");
 			return;
 		}	
 		for(var i=0; i<returnStr.length-1; i++){
-			if(returnStr[i]==$(this).val()){
+			if(returnStr[i]==$(this).text()){
 	            return;
 	         }
 		}//for
-		$('#search').val($('#search').val()+$(this).val()+" ");
-    });//bind       */
-	
-    // 인기 검색어 클릭시 new
-    $('input[name=hotKeyword]').bind("click", function() {
-		var str = $('#keyword').val();
-		var returnStr = str.split(" ");
-		
-		if(returnStr.length==1){
-			$('#keyword').val($('#keyword').val()+$(this).val()+" ");
-			return;
-		}	
-		for(var i=0; i<returnStr.length-1; i++){
-			if(returnStr[i]==$(this).val()){
-	            return;
-	         }
-		}//for
-		$('#keyword').val($('#keyword').val()+$(this).val()+" ");
-    });//bind 
+		$('#search').val($('#search').val()+$(this).text()+" ");
+    });//bind       
     
     
-  //검색 엔터 추가..
+    //검색 엔터 추가..
     $("#search").keypress(function(enter) {
           if(enter.which==13){
              search(); // 실행할 이벤트..
@@ -103,25 +88,9 @@ $(function() {
 		$(this).parent().removeClass('focus');
 	}); // focus()
 	
-	/* // 검색 카테고리 선택되었을 때
-	$('.search-option>div').click(function(){
-		//alert($('input:radio:checked').val());
-		alert($('.search-form').serialize());
-	}); */
+	// 카테고리 dropdown
+	$('.dropdown-toggle').dropdown();
 	
-	// 검색 버튼 클릭 시
-	$('#search_new').click(function(){
-		var infos = $('.search-form').serialize();
-		var keyword = $('input[name=keyword]').val();
-		
-		if(keyword.value==""){
-			alert("검색어를 입력해주세요");
-			return;
-		}
-		
-		keyword = escape(encodeURIComponent(keyword.value));
-		location.href="search.do?"+infos+"&from=all";
-	});
 });//function
 
 
@@ -129,7 +98,7 @@ $(function() {
 function selectButton(kind) {
 	var keyword = '${keyword}';
 	keyword = escape(encodeURIComponent(keyword));
-	location.href="searchAgain.do?keyword="+keyword+"&&select=${select}"+"&&from="+kind;
+	location.href="searchAgain.do?keyword="+keyword+"&&select=${select}"+"&&from="+kind+"&&sort=";
 }
 
 
@@ -144,7 +113,7 @@ function deleteBookmark(kind, bno, sno) {
                dataType:"json",
                   
                success:function(data){
-                  $('#'+sno).remove;
+                  $('#'+bno).remove;
                   location.reload();
                }//callback
             });//ajax
@@ -190,7 +159,7 @@ function bookmark(kind, bno, sno) {
                    $.ajax({
                       type:"post",
                       url:"insertBookmark.do",
-                      data:"book_no="+bno+"&&storyNo="+sno+"&&from=all",
+                      data:"book_no="+bno+"&&storyNo="+sno+"&&from=all&&sort=",
                       dataType:"json",
                          
                       success:function(data){
@@ -206,8 +175,9 @@ function bookmark(kind, bno, sno) {
 //로그인 체크
 function loginCheck() {
 	if(confirm("로그인을 해주세요.\n로그인 창으로 이동합니다."))	
-		location.href="Login.jsp";
+		location.href="index.jsp";
 }
+
 //검색
 var value="all";
 var category="";
@@ -218,27 +188,39 @@ function category_selected() {
 	value = category.options[index].value;
 	document.getElementById('search').value="";
 }
+
 //검색 버튼 눌렀을 때
-	function search() {
+function search() {
 	var keyword = document.getElementById('search');
 	if(keyword.value==""){
 		alert("검색어를 입력해주세요");
 		return;
 	}
 	keyword = escape(encodeURIComponent(keyword.value));
-	location.href="search.do?select="+value+"&&keyword="+keyword+"&&from=all";
-} 
+	location.href="search.do?select="+value+"&&keyword="+keyword+"&&from=all&&sort=";
+}  
 
-// 새로운 검색창
-function search_new(){
-	
-}
+// 7/12 조회수순, 최신순, 인기순 정렬
+   function sorting(kind) {
+		var keyword = '${keyword}';
+    	keyword = escape(encodeURIComponent(keyword));
+    	if(${select==""}) 
+    	   	location.href="searchAgain.do?keyword="+keyword+"&&select=all&&from=all"+"&&sort="+kind;
+    	else
+    	   	location.href="searchAgain.do?keyword="+keyword+"&&select=${select}&&from=all"+"&&sort="+kind;
+    }   
 </script>
 
 <style type="text/css">
-th {
-	width: 15%;
+table{
+	width: 100%;
 }
+td{
+	border: 1px solid #c2c3c4;
+	width: 33%;
+	height: 100px;
+}
+
 </style>
 </head>
 <body>
@@ -382,158 +364,101 @@ th {
 	<!-- --------------------------------------------- [끝] 제목 Section --------------------------------------------- -->
 	<br/>
 	<br/>
-	<br/>
-	<div class="container" style="background-color: #DEDEDE; width: 100%; min-height: 200px;">
-		<!-- 검색 -->
-		<%-- <select id="category" onchange="category_selected()" style="width: 100px;">
-			<option value="all">전체</option>
-			<option value="title">제목</option>
-			<option value="content">내용</option>
-			<option value="location">장소</option>
-		</select>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<c:choose>
-			<c:when test="${keyword==null}">
-				<input type="text" name="search" id="search" placeholder="검색어를 입력하세요">
-			</c:when>
-			<c:otherwise>
-				<input type="text" name="search" id="search" value="${keyword}">
-			</c:otherwise>
-		</c:choose>
-		<input type="button" value="검색" onclick="search()"><p><br> --%>
+	<div class="container" style="width: 100%;">
 		<div class="row">
-			<div class="col-md-1"></div>
+			<div class="col-md-3"></div>
+			<div class="col-md-1">
+				<select id="category" onchange="category_selected()" class="form-control" style="position: relative;top: 33px;height: 40px;">
+				  <option value="all">전체</option>
+				  <option value="title">제목</option>
+				  <option value="content">내용</option>
+				  <option value="location">장소</option>
+				</select>
+				
+				<!-- <div class="search-option"> -->
+				<!-- <input name="select" type="radio" value="all" id="type-users" checked="checked"> -->
+				
+			</div>
 			<div class="col-md-4">
 				<br/>
-				<!-- --------------------------------------------- [시작] 검색창 --------------------------------------------- -->	
+		<!-- --------------------------------------------- [시작] 검색창 --------------------------------------------- -->	
 				<form class="search-form">
 					<c:choose>
 						<c:when test="${keyword==null}">
-							<input type="text" name="keyword" id="keyword" placeholder="검색어를 입력하세요" class="search-input">
+							<input type="text" name="search" id="search" placeholder="검색어를 입력하세요" class="search-input">
+							
 						</c:when>
 						<c:otherwise>
-							<input type="text" name="keyword" id="keyword" value="${keyword}" class="search-input">
+							<input type="text" name="search" id="search" value="${keyword}" class="search-input">
+							
 						</c:otherwise>
 					</c:choose>
-					<!-- <input type="search" value="" placeholder="Search" class="search-input" name="keyword"> -->
-					<!-- <button type="submit" class="search-button">
-						<svg class="submit-button">
-			      			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
-			    		</svg>
-					</button> -->
-					<div class="search-option">
-						<div>
-							<input name="select" type="radio" value="all" id="type-users" checked="checked">
-							<label for="type-users">
-							<svg class="edit-pen-title">
-			          			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
-			        		</svg> 
-			        		<span>ALL</span>
-							</label>
-						</div>
-			
-						<div>
-							<input name="select" type="radio" value="title" id="type-posts">
-							<label for="type-posts">
-							<svg class="edit-pen-title">
-			          			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#post"></use>
-			        		</svg>
-			        		<span>TITLE</span>
-							</label>
-						</div>
-						<div>
-							<input name="select" type="radio" value="content" id="type-images">
-							<label for="type-images">
-							<svg class="edit-pen-title">
-			          			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#images"></use>
-			        		</svg>
-			        		<span>CONTENTS</span>
-							</label>
-						</div>
-						<div>
-							<input name="select" type="radio" value="location" id="type-special">
-							<label for="type-special">
-								<svg class="edit-pen-title">
-			          				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#special"></use>
-			        			</svg>
-			        			<span>LOCATION</span>
-							</label>
-						</div>
-					</div>
 				</form>
 				<p>
-		
-	
-				<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" display="none">
-				  	<symbol id="search" viewBox="0 0 32 32">
-				    	<path d="M 19.5 3 C 14.26514 3 10 7.2651394 10 12.5 C 10 14.749977 10.810825 16.807458 12.125 18.4375 L 3.28125 27.28125 L 4.71875 28.71875 L 13.5625 19.875 C 15.192542 21.189175 17.250023 22 19.5 22 C 24.73486 22 29 17.73486 29 12.5 C 29 7.2651394 24.73486 3 19.5 3 z M 19.5 5 C 23.65398 5 27 8.3460198 27 12.5 C 27 16.65398 23.65398 20 19.5 20 C 15.34602 20 12 16.65398 12 12.5 C 12 8.3460198 15.34602 5 19.5 5 z" />
-				  	</symbol>
-				  	<symbol id="user" viewBox="0 0 32 32">
-				    	<path d="M 16 4 C 12.145852 4 9 7.1458513 9 11 C 9 13.393064 10.220383 15.517805 12.0625 16.78125 C 8.485554 18.302923 6 21.859881 6 26 L 8 26 C 8 21.533333 11.533333 18 16 18 C 20.466667 18 24 21.533333 24 26 L 26 26 C 26 21.859881 23.514446 18.302923 19.9375 16.78125 C 21.779617 15.517805 23 13.393064 23 11 C 23 7.1458513 19.854148 4 16 4 z M 16 6 C 18.773268 6 21 8.2267317 21 11 C 21 13.773268 18.773268 16 16 16 C 13.226732 16 11 13.773268 11 11 C 11 8.2267317 13.226732 6 16 6 z" />
-				    </symbol>
-				  	<symbol id="images" viewbox="0 0 32 32">
-				    	<path d="M 2 5 L 2 6 L 2 26 L 2 27 L 3 27 L 29 27 L 30 27 L 30 26 L 30 6 L 30 5 L 29 5 L 3 5 L 2 5 z M 4 7 L 28 7 L 28 20.90625 L 22.71875 15.59375 L 22 14.875 L 21.28125 15.59375 L 17.46875 19.40625 L 11.71875 13.59375 L 11 12.875 L 10.28125 13.59375 L 4 19.875 L 4 7 z M 24 9 C 22.895431 9 22 9.8954305 22 11 C 22 12.104569 22.895431 13 24 13 C 25.104569 13 26 12.104569 26 11 C 26 9.8954305 25.104569 9 24 9 z M 11 15.71875 L 20.1875 25 L 4 25 L 4 22.71875 L 11 15.71875 z M 22 17.71875 L 28 23.71875 L 28 25 L 23.03125 25 L 18.875 20.8125 L 22 17.71875 z" />
-				  	</symbol>
-				  	<symbol id="post" viewbox="0 0 32 32">
-				    	<path d="M 3 5 L 3 6 L 3 23 C 3 25.209804 4.7901961 27 7 27 L 25 27 C 27.209804 27 29 25.209804 29 23 L 29 13 L 29 12 L 28 12 L 23 12 L 23 6 L 23 5 L 22 5 L 4 5 L 3 5 z M 5 7 L 21 7 L 21 12 L 21 13 L 21 23 C 21 23.73015 21.221057 24.41091 21.5625 25 L 7 25 C 5.8098039 25 5 24.190196 5 23 L 5 7 z M 7 9 L 7 10 L 7 13 L 7 14 L 8 14 L 18 14 L 19 14 L 19 13 L 19 10 L 19 9 L 18 9 L 8 9 L 7 9 z M 9 11 L 17 11 L 17 12 L 9 12 L 9 11 z M 23 14 L 27 14 L 27 23 C 27 24.190196 26.190196 25 25 25 C 23.809804 25 23 24.190196 23 23 L 23 14 z M 7 15 L 7 17 L 12 17 L 12 15 L 7 15 z M 14 15 L 14 17 L 19 17 L 19 15 L 14 15 z M 7 18 L 7 20 L 12 20 L 12 18 L 7 18 z M 14 18 L 14 20 L 19 20 L 19 18 L 14 18 z M 7 21 L 7 23 L 12 23 L 12 21 L 7 21 z M 14 21 L 14 23 L 19 23 L 19 21 L 14 21 z" />
-				  	</symbol>
-				  	<symbol id="special" viewbox="0 0 32 32">
-				    	<path d="M 4 4 L 4 5 L 4 27 L 4 28 L 5 28 L 27 28 L 28 28 L 28 27 L 28 5 L 28 4 L 27 4 L 5 4 L 4 4 z M 6 6 L 26 6 L 26 26 L 6 26 L 6 6 z M 16 8.40625 L 13.6875 13.59375 L 8 14.1875 L 12.3125 18 L 11.09375 23.59375 L 16 20.6875 L 20.90625 23.59375 L 19.6875 18 L 24 14.1875 L 18.3125 13.59375 L 16 8.40625 z M 16 13.3125 L 16.5 14.40625 L 17 15.5 L 18.1875 15.59375 L 19.40625 15.6875 L 18.5 16.5 L 17.59375 17.3125 L 17.8125 18.40625 L 18.09375 19.59375 L 17 19 L 16 18.40625 L 15 19 L 14 19.59375 L 14.3125 18.40625 L 14.5 17.3125 L 13.59375 16.5 L 12.6875 15.6875 L 13.90625 15.59375 L 15.09375 15.5 L 15.59375 14.40625 L 16 13.3125 z" />
-				  	</symbol>
-				</svg>
-				<br/>
-				<div style="text-align: center;">
-					<a class="button button-3d button-action button-pill" onclick="selectButton('book')">#Storybook</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="button button-3d button-action button-pill" onclick="selectButton('story')">#Story</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<ahref="http://unicorn-ui.com/" class="button button-3d button-action button-pill" onclick="selectButton('all')">#All</a>
-				</div>
-			</div>
+				<i class="fa fa-search" aria-hidden="true" id="search-icon" type="button" onclick="search()"></i>
 
 	<!-- --------------------------------------------- [끝] 검색창 --------------------------------------------- -->	
-			<!-- <div class="col-md-1"></div> -->
-			<div class="col-md-6">
-				<br/>
-				<!-- 검색 기법  -->
-				<span>인기 검색어</span>&ensp;
-				<input type="button" name="hotKeyword" value="${reportList[0]}" onclick="" class="button button-primary button-raised button-pill">&ensp; 
-				<input type="button" name="hotKeyword" value="${reportList[1]}" onclick="" class="button button-primary button-raised button-pill">&ensp; 
-				<input type="button" name="hotKeyword" value="${reportList[2]}" onclick="" class="button button-primary button-raised button-pill">&ensp; 
-				<input type="button" name="hotKeyword" value="${reportList[3]}" onclick="" class="button button-primary button-raised button-pill">&ensp; 
-				<input type="button" name="hotKeyword" value="${reportList[4]}" onclick="" class="button button-primary button-raised button-pill"><br><p>
-			
-				<!-- all, title, content 선택 -->
-				<br/>
-				<!-- <div>
-					<input type="button" value="#ALL" onclick="selectButton('all')">&nbsp;&nbsp; 
-					<input type="button" value="#BOOK" onclick="selectButton('book')">&nbsp;&nbsp; 
-					<input type="button" value="#STORY" onclick="selectButton('story')"><p>
-				</div> -->
-				<span>정렬</span>&ensp;&ensp;&ensp;
-				<input type="button" value="조회순" class="button button-highlight button-raised button-pill">&nbsp;&nbsp; 
-				<input type="button" value="인기순" class="button button-highlight button-raised button-pill">&nbsp;&nbsp; 
-				<input type="button" value="최신순" class="button button-highlight button-raised button-pill"><p>
+				
 			</div>
-			<div class="col-md-1">
-				<input type="button" value="검색" id="search_new" style="width: 100%;background-color: white; border-radius: 40px;height: 40px;" class="btn btn-common" >
+			<div class="col-md-1">		
+				<!-- <input type="button" onclick="search()" value="검색" style="top: 33px;position: relative;width: 100%;background-color: white; border-radius: 40px;height: 40px;" class="btn btn-common"> --> 
 			</div>
-			<!-- <div class="col-md-6" style="background-color: black; height: 100px;"></div>
-			<div class="col-md-1"></div> -->
+			<div class="col-md-3"></div>
 		</div>
+			
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6" style="text-align: center;">
+				<br/>
+				인기검색어 &ensp;<i class="fa fa-chevron-right" aria-hidden="true"></i>&ensp;&ensp;&ensp;
+				<a class="hotKeyword"><font size="4px">${reportList[0]}</font></a>&ensp;&ensp;&ensp;  
+				<a class="hotKeyword"><font size="4px">${reportList[1]}</font></a>&ensp;&ensp;&ensp;   
+				<a class="hotKeyword"><font size="4px">${reportList[2]}</font></a>&ensp;&ensp;&ensp; 
+				<a class="hotKeyword"><font size="4px">${reportList[3]}</font></a>&ensp;&ensp;&ensp;
+				<a class="hotKeyword"><font size="4px">${reportList[4]}</font></a>&ensp;&ensp;&ensp;
+			</div>
+			<div class="col-md-3">
+			</div>
+		</div>
+		<br/>
+		<br/>
+		<br/>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<table style="width: 100%;text-align: center;">
+					<tr>
+						<td style="background-color: #b71010;"><a onclick="selectButton('all')" style="color: white;">All</a></td>
+						<td><a onclick="selectButton('story')">Story</a></td>
+						<td><a onclick="selectButton('book')">Storybook</a></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-3"></div>
+		</div>
+		<br/>
 	</div>
 	
-	
 	<!-- --------------------------------------------- [시작] Book List--------------------------------------------- -->
-	<!-- <div class="container"> -->
-	<c:if test="${keyword!=null}">
-		<h4>${keyword}의검색결과..all</h4>
-	</c:if>
+	
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
 	<c:choose>
 		<c:when test="${fn:length(bookList)!=0}">
-			<h2 align="center">Books</h2>
 			<div class="container" style="width: 85%;">
 				<div class="row">
+					<div class="col-md-12" style="text-align: center;">
+						<font size="30px">STORYBOOK</font>
+					</div>
+					<div style="text-align: left;">
+						<a class="sorting" id="new-sort" href="javascript:sorting('new')" style="font-size: 18px;text-decoration: underline;color: black;">최신순</a>&ensp;&ensp;
+						<a class="sorting" id="hit-sort" href="javascript:sorting('hit')" style="font-size: 18px;color: black;">조회수순</a>&ensp;&ensp;
+						<a class="sorting" id="bookmark-sort" href="javascript:sorting('bookmark')" style="font-size: 18px;color: black;">인기순</a>
+					</div>
 					<c:forEach items="${bookList}" var="book">
 						<c:if test="${book.nick!=sessionScope.mvo.nickname}">
 							<!-- book -->
@@ -549,12 +474,12 @@ th {
 													<c:choose>
 														<c:when test="${book.bookmark=='false'}">
 															<div class="bookmark">
-																<img id="0" src="${initParam.root}images/bookmarkOff_book.png" width="50" height="50" onclick="bookmark('book',${book.book_no},0)">
+																<img id="${book.book_no}" src="${initParam.root}images/bookmarkOff_book.png" width="50" height="50" onclick="bookmark('book',${book.book_no},0)">
 															</div>
 														</c:when>
 														<c:otherwise>
 															<div class="bookmark">
-																<img id="0" src="${initParam.root}images/bookmarkOn_book.png" width="50" height="50" onclick="deleteBookmark('book',${book.book_no},0)">
+																<img id="${book.book_no}" src="${initParam.root}images/bookmarkOn_book.png" width="50" height="50" onclick="deleteBookmark('book',${book.book_no},0)">
 															</div>
 														</c:otherwise>
 													</c:choose>
@@ -567,9 +492,18 @@ th {
 													<header class="card__item-b card__header-b">
 														<p class="sb-letter-b">Book</p>
 														<h6 class="card__item-b card__item--small-b card__label-b">${book.nick}</h6>
-														<h2 class="card__item-b card__item--small-b card__title-b bookTitle" style="font-size: 33px; font-family: 'Nanum Myeongjo'">
-															<a href="showStoryList.do?book_no=${book.book_no}"><b>${book.book_title}</b></a>
-														</h2>
+														<c:choose>
+															<c:when test="${sessionScope.mvo.email!=null}">
+																<h2 class="card__item-b card__item--small-b card__title-b bookTitle" style="font-size: 33px; font-family: 'Nanum Myeongjo'">
+																	<a href="showStoryList.do?book_no=${book.book_no}"><b>${book.book_title}</b></a>
+																</h2>
+															</c:when>
+															<c:otherwise>
+																<h2 class="card__item card__item--small card__title" style="font-size: 33px; font-family: 'Nanum Myeongjo'">
+																	<a href="javascript:loginCheck()">${book.book_title}</a>
+																</h2>
+															</c:otherwise>
+														</c:choose>
 													</header>
 
 													<div class="story-down-b">
@@ -591,10 +525,8 @@ th {
 		</c:when>
 		<c:otherwise>
 			<h2>공개된 북이 없습니다.</h2>
-			<!-- <a href="book_Insert.jsp" >Story Book 추가하기</a> -->
 		</c:otherwise>
 	</c:choose>
-	<!-- </div> -->
 	<!-- --------------------------------------------- [끝] Book List --------------------------------------------- -->
 	<br />
 	<br />
@@ -608,9 +540,16 @@ th {
 	<!-- 스토리 리스트 -->
 	<c:choose>
 		<c:when test="${fn:length(storyList)!=0}">
-			<h2 align="center">Stories</h2>
 			<div class="container" style="width: 85%;">
 				<div class="row">
+					<div class="col-md-12" style="text-align: center;">
+						<font size="30px">STORY</font>
+					</div>
+					<div style="text-align: left;">
+						<a class="sorting" id="new-sort" href="javascript:sorting('new')" style="font-size: 18px;text-decoration: underline;color: black;">최신순</a>&ensp;&ensp;
+						<a class="sorting" id="hit-sort" href="javascript:sorting('hit')" style="font-size: 18px;color: black;">조회수순</a>&ensp;&ensp;
+						<a class="sorting" id="bookmark-sort" href="javascript:sorting('bookmark')" style="font-size: 18px;color: black;">인기순</a>
+					</div>
 					<c:forEach items="${storyList}" var="story">
 						<c:if test="${story.member.nickname!=sessionScope.mvo.nickname}">
 							<div class="col-md-3">
@@ -784,7 +723,7 @@ th {
 	<!--/#footer-->
 	<!-- --------------------------------------------- [끝] Footer --------------------------------------------- -->
 
-	<!-- <script type="text/javascript" src="js/jquery.js"></script> -->
+	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/lightbox.min.js"></script>
 	<script type="text/javascript" src="js/wow.min.js"></script>

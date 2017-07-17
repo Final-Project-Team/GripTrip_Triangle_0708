@@ -268,8 +268,8 @@
 			object-fit: cover;	
 			/* border: 0.5px solid #5a2d18; */	
 			
-			-webkit-transition: all 0.2s ease;
-    	    transition: all 0.2s ease;
+			/* -webkit-transition: all 0.2s ease;
+    	    transition: all 0.2s ease; */
 		}
 		
 		.book:hover img {
@@ -280,8 +280,8 @@
 		  filter: brightness(0.7);
 		  -webkit-filter: brightness(0.7);
 		  
-		  width: 210px;
-		  height: 315px;
+		  /* width: 210px;
+		  height: 315px; */
 		}
 		
 		/*

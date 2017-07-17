@@ -16,11 +16,6 @@ public class StoryDAOImpl implements StoryDAO{
 	private SqlSession sqlSession;
 	
 	@Override
-	public String getStoryLocation(String StoryLocation) throws Exception{
-		return StoryLocation;
-	}
-   
-	@Override
 	public void insertStoryInfo(Story story) throws Exception{
 		sqlSession.insert("storyMapper.insertStoryInfo", story);
 	}
@@ -56,8 +51,8 @@ public class StoryDAOImpl implements StoryDAO{
 	}
 
 	@Override
-	public void updateBookmark(String storyNo) throws Exception {
-		sqlSession.update("storyMapper.updateBookmark",storyNo);
+	public void updateStoryBookmark(String storyNo) throws Exception {
+		sqlSession.update("storyMapper.updateStoryBookmark",storyNo);
 	}
 
 	@Override
@@ -98,5 +93,76 @@ public class StoryDAOImpl implements StoryDAO{
 	@Override
 	public List<Story> searchStoryByLocation(String keyword) throws Exception {
 		return sqlSession.selectList("storyMapper.searchStoryByLocation", keyword);
+	}
+
+	@Override
+	public List<Story> allStoryListByHit() throws Exception {
+		return sqlSession.selectList("storyMapper.allStoryListByHit");
+	}
+
+	@Override
+	public List<Story> searchStoryOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryOrderByHit", keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByTitleOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryByTitleOrderByHit", keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByContentOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryByContentOrderByHit", keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByLocationOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryByLocationOrderByHit", keyword);
+	}
+
+	@Override
+	public void upStoryBookmarkCount(int storyNo) throws Exception {
+		// TODO Auto-generated method stub
+		sqlSession.update("storyMapper.upStoryBookmarkCount",storyNo);
+	}
+
+	@Override
+	public void downStoryBookmarkCount(int storyNo) throws Exception {
+		// TODO Auto-generated method stub
+		sqlSession.update("storyMapper.downStoryBookmarkCount",storyNo);
+	}
+
+	@Override
+	public List<Story> allStoryListOrderByBookmark() throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.allStoryListOrderByBookmark");
+	}
+
+	@Override
+	public List<Story> searchStoryOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryOrderByBookmark", keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByTitleOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryByTitleOrderByBookmark", keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByContentOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryByContentOrderByBookmark", keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByLocationOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storyMapper.searchStoryByLocationOrderByBookmark", keyword);
 	}
 }

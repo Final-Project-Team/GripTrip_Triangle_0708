@@ -54,11 +54,6 @@ public class BookDAOImpl implements BookDAO{
 	public String getNickName(int book_no) throws Exception {
 		return sqlSession.selectOne("bookMapper.getNickName", book_no);
 	}
-
-	@Override
-	public int maxBookNo() throws Exception {
-		return sqlSession.selectOne("bookMapper.maxBookNo");
-	}
 	
 	@Override
 	   public List<Book> getMyBookList(String email) throws Exception {
@@ -112,8 +107,66 @@ public class BookDAOImpl implements BookDAO{
 
 	@Override
 	public int getStoryCountOfBook(int book_no) throws Exception {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne("storyMapper.getStoryCountOfBook", book_no);
 	}
 
+	@Override
+	public List<Book> getAllBookListOrderByHit() throws Exception {
+		return sqlSession.selectList("bookMapper.getAllBookListOrderByHit");
+	}
+
+	@Override
+	public List<Book> searchBookOrderByHit(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookOrderByHit", keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByTitleOrderByHit(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookByTitleOrderByHit", keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByContentOrderByHit(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookByContentOrderByHit", keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByLocationOrderByHit(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookByLocationOrderByHit", keyword);
+	}
+
+	@Override
+	public void upBookmarkCount(int book_no) throws Exception {
+		sqlSession.update("bookMapper.upBookmarkCount", book_no);
+	}
+
+	@Override
+	public void downBookmarkCount(int book_no) throws Exception {
+		sqlSession.update("bookMapper.downBookmarkCount", book_no);
+	}
+
+	@Override
+	public List<Book> getAllBookListOrderByBookmark() throws Exception {
+		return sqlSession.selectList("bookMapper.getAllBookListOrderByBookmark");
+	}
+
+	@Override
+	public List<Book> searchBookOrderByBookmark(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookOrderByBookmark",keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByTitleOrderByBookmark(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookByTitleOrderByBookmark",keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByContentOrderByBookmark(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookByContentOrderByBookmark",keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByLocationOrderByBookmark(String keyword) throws Exception {
+		return sqlSession.selectList("bookMapper.searchBookByLocationOrderByBookmark",keyword);
+	}
 }

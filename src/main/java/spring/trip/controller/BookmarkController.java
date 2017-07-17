@@ -47,7 +47,7 @@ public class BookmarkController {
       if(storyNo!=0){ //스토리를 북마크 추가했을 때
          bookmark = new Bookmark(book_no, storyNo);
          bookmark.setMember(member);
-         storyService.updateBookmark(Integer.toString(story.getStoryNo()));
+         storyService.updateStoryBookmark(Integer.toString(story.getStoryNo()));
          story.setBookmark("true");
          System.out.println("스토리 북마크 추가");
          bookmarkService.insertBookmark(bookmark);

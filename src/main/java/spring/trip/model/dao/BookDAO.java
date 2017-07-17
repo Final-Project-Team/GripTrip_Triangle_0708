@@ -23,7 +23,7 @@ public interface BookDAO {
 	
 	public String getNickName(int book_no) throws Exception;
 	
-	public int maxBookNo() throws Exception;
+	//public int maxBookNo() throws Exception;
 	
 	public List<Book> getMyBookList(String email) throws Exception;
 	
@@ -46,4 +46,29 @@ public interface BookDAO {
 	public List<Book> searchBookByLocation(String keyword) throws Exception;
 	
 	public int getStoryCountOfBook(int book_no) throws Exception;
+	//
+	public List<Book> getAllBookListOrderByHit() throws Exception;
+	
+	public List<Book> searchBookOrderByHit(String keyword) throws Exception;
+	
+	public List<Book> searchBookByTitleOrderByHit(String keyword) throws Exception;
+	
+	public List<Book> searchBookByContentOrderByHit(String keyword) throws Exception;
+	
+	public List<Book> searchBookByLocationOrderByHit(String keyword) throws Exception;
+	
+	public void upBookmarkCount(int book_no) throws Exception;
+	
+	public void downBookmarkCount(int book_no) throws Exception;
+	
+	public List<Book> getAllBookListOrderByBookmark() throws Exception;
+
+	public List<Book> searchBookOrderByBookmark(String keyword) throws Exception;
+	
+	public List<Book> searchBookByTitleOrderByBookmark(String keyword) throws Exception;
+	
+	public List<Book> searchBookByContentOrderByBookmark(String keyword) throws Exception;
+	
+	public List<Book> searchBookByLocationOrderByBookmark(String keyword) throws Exception;
+
 }

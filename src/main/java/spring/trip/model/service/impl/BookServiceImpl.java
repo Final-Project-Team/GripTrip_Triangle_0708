@@ -61,10 +61,10 @@ public class BookServiceImpl implements BookService{
 		return bookDAO.getNickName(book_no);
 	}
 
-	@Override
+/*	@Override
 	public int maxBookNo() throws Exception {
 		return bookDAO.maxBookNo();
-	}
+	}*/
 	
 	 @Override
 	   public List<Book> getMyBookList(String email) throws Exception {
@@ -122,4 +122,74 @@ public class BookServiceImpl implements BookService{
 		return bookDAO.getStoryCountOfBook(book_no);
 	}
 
+	@Override
+	public List<Book> getAllBookListOrderByHit() throws Exception {
+		return bookDAO.getAllBookListOrderByHit();
+	}
+
+	@Override
+	public List<Book> searchBookOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookOrderByHit(keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByTitleOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookByTitleOrderByHit(keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByContentOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookByContentOrderByHit(keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByLocationOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookByLocationOrderByHit(keyword);
+	}
+
+	@Override
+	public void upBookmarkCount(int book_no) throws Exception {
+		// TODO Auto-generated method stub
+		bookDAO.upBookmarkCount(book_no);
+	}
+
+	@Override
+	public void downBookmarkCount(int book_no) throws Exception {
+		// TODO Auto-generated method stub
+		bookDAO.downBookmarkCount(book_no);
+	}
+
+	@Override
+	public List<Book> getAllBookListOrderByBookmark() throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.getAllBookListOrderByBookmark();
+	}
+
+	@Override
+	public List<Book> searchBookOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookOrderByBookmark(keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByTitleOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookByTitleOrderByBookmark(keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByContentOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookByContentOrderByBookmark(keyword);
+	}
+
+	@Override
+	public List<Book> searchBookByLocationOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return bookDAO.searchBookByLocationOrderByBookmark(keyword);
+	}
 }

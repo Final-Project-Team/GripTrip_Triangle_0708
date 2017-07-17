@@ -8,7 +8,7 @@ Body
 } */
 
 body {
-	background: #DEDEDE;
+	/* background: #DEDEDE; */
 	/* height: 100vh;
 	margin: 0;
 	background: #DEDEDE;
@@ -21,6 +21,14 @@ body {
 /*--------------------
 App
 --------------------*/
+#search-icon{
+	position: absolute;
+	right: 30px;
+	top:36px;
+	font-size: 25px;
+	color: gray;
+}
+
 .search-form {
 	/* top: 50%; */
 	/* position: absolute; */
@@ -38,10 +46,20 @@ App
 	background: #fff;
 	-webkit-transition: all 0.3s ease;
 	transition: all 0.3s ease;
+	
+	border: 1px solid #c2c3c4;
 }
 
 .search-form.focus {
+	border-color: #4fcccd;
 	box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+	border: 1px solid #4fcccd;
+}
+
+.search-form:hover{
+	border: 1px solid #4fcccd;
+	outline: none;
+  box-shadow: none;
 }
 
 .search-input {

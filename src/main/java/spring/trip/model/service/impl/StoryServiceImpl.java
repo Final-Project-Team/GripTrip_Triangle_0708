@@ -38,11 +38,6 @@ public class StoryServiceImpl implements StoryService{
 	}
 
 	@Override
-	public String getStoryLocation(String StoryLocation) throws Exception {
-		return storyDAO.getStoryLocation(StoryLocation);
-	}
-
-	@Override
 	public void insertStoryInfo(Story story) throws Exception {
 		storyDAO.insertStoryInfo(story);
 	}
@@ -84,8 +79,8 @@ public class StoryServiceImpl implements StoryService{
 	}
 
 	@Override
-	public void updateBookmark(String storyNo) throws Exception {
-		storyDAO.updateBookmark(storyNo);
+	public void updateStoryBookmark(String storyNo) throws Exception {
+		storyDAO.updateStoryBookmark(storyNo);
 	}
 
 	@Override
@@ -126,5 +121,74 @@ public class StoryServiceImpl implements StoryService{
 	@Override
 	public List<Story> searchStoryByLocation(String keyword) throws Exception {
 		return storyDAO.searchStoryByLocation(keyword);
+	}
+
+	@Override
+	public List<Story> allStoryListByHit() throws Exception {
+		return storyDAO.allStoryListByHit();
+	}
+
+	@Override
+	public List<Story> searchStoryOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryOrderByHit(keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByTitleOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryByTitleOrderByHit(keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByContentOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryByContentOrderByHit(keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByLocationOrderByHit(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryByLocationOrderByHit(keyword);
+	}
+
+	@Override
+	public void upStoryBookmarkCount(int storyNo) throws Exception {
+		storyDAO.upStoryBookmarkCount(storyNo);		
+	}
+
+	@Override
+	public void downStoryBookmarkCount(int storyNo) throws Exception {
+		storyDAO.downStoryBookmarkCount(storyNo);
+	}
+
+	@Override
+	public List<Story> allStoryListOrderByBookmark() throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.allStoryListOrderByBookmark();
+	}
+
+	@Override
+	public List<Story> searchStoryOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryOrderByBookmark(keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByTitleOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryByTitleOrderByBookmark(keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByContentOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryByContentOrderByBookmark(keyword);
+	}
+
+	@Override
+	public List<Story> searchStoryByLocationOrderByBookmark(String keyword) throws Exception {
+		// TODO Auto-generated method stub
+		return storyDAO.searchStoryByLocationOrderByBookmark(keyword);
 	}
 }

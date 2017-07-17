@@ -9,47 +9,15 @@ public class Book {
 	private String book_picture_url;
 	private String book_is_public;
 	private int book_hit;
-	//추가
 	private String nick;
-	//추가
 	private String bookmark;
 	private int price;
-	// 추가
 	private int storyCount;
+	private int bookmark_count;
 	
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public String getBookmark() {
-		return bookmark;
-	}
-
-	public void setBookmark(String bookmark) {
-		this.bookmark = bookmark;
-	}
-
-	public String getNick() {
-		return nick;
-	}
-
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
-
 	private MultipartFile uploadFile;
 	
-	public MultipartFile getUploadFile() {
-		return uploadFile;
-	}
 
-	public void setUploadFile(MultipartFile uploadFile) {
-		this.uploadFile = uploadFile;
-	}
 
 	public Book(int book_no, String book_title, String book_create_date, String book_picture_url, String book_is_public,
 			int book_hit) {
@@ -71,7 +39,6 @@ public class Book {
 
 	public Book() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Book(int book_no, String book_title, String book_create_date, String book_picture_url, String book_is_public,
@@ -133,6 +100,46 @@ public class Book {
 
 	public void setStoryCount(int storyCount) {
 		this.storyCount = storyCount;
+	}
+	
+	public int getBookmark_count() {
+		return bookmark_count;
+	}
+
+	public void setBookmark_count(int bookmark_count) {
+		this.bookmark_count = bookmark_count;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getBookmark() {
+		return bookmark;
+	}
+
+	public void setBookmark(String bookmark) {
+		this.bookmark = bookmark;
+	}
+
+	public String getNick() {
+		return nick;
+	}
+
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+	
+	public MultipartFile getUploadFile() {
+		return uploadFile;
+	}
+
+	public void setUploadFile(MultipartFile uploadFile) {
+		this.uploadFile = uploadFile;
 	}
 
 	@Override

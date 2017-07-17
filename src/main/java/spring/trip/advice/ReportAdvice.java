@@ -13,23 +13,26 @@ import spring.trip.model.service.ReportService;
 
 @Aspect
 public class ReportAdvice {
-	@Autowired
-	private ReportService reportService;
+   @Autowired
+   private ReportService reportService;
 
-	@Before("execution(* spring.trip.controller.SearchController.search(..))")
-	   public void report(JoinPoint jp) throws Throwable{
-	      
-	      ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-	      HttpServletRequest request = attr.getRequest();
-	      
-	      String keyword = request.getParameter("keyword");
-	      keyword = URLDecoder.decode(keyword);
-	      System.out.println("Advice Class keyword :: "+keyword);
-	      
-	      reportService.saveReport(keyword);	      
-	   }
+   @Before("execution(* spring.trip.controller.SearchController.search(..))")
+      public void report(JoinPoint jp) throws Throwable{
+         
+         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+         HttpServletRequest request = attr.getRequest();
+         
+         String keyword = request.getParameter("keyword");
+         keyword = URLDecoder.decode(keyword);
+         String[] rkeyword = keyword.split(" ");
+         
+         for(String s : rkeyword){
+            System.out.println("Advice Class keyword :: "+s);
+            reportService.saveReport(keyword);
+         } 
+         //reportService.saveReport(keyword);         
+      }
 }
-
 
 
 
